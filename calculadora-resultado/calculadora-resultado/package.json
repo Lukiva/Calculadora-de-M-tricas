@@ -1,0 +1,11 @@
+{
+  "name": "calculadora-resultado",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Calculadora de metas do funil de vendas com cenários pessimista, conservador e otimista.",
+  "type": "module",
+  "scripts": {
+    "dev": "npx --yes serve .",
+    "test": "node --test tests/funnels.test.js"
+  }
+}

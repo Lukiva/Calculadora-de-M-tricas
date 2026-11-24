@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Calculadora de resultado</title>
+  <meta name="description" content="Projete o resultado de uma campanha e compare os cenários pessimista, conservador e otimista." />
+  <meta name="color-scheme" content="light dark" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="page">
+    <header class="top">
+      <div class="brand">
+        <h1>Calculadora de resultado</h1>
+        <p>Projete o resultado de uma campanha antes de investir e veja o que muda se as taxas vierem piores ou melhores.</p>
+      </div>
+      <div class="actions">
+        <button type="button" class="btn" id="copyLink">Copiar link</button>
+        <button type="button" class="btn" id="exportCsv">Exportar CSV</button>
+        <button type="button" class="btn btn-quiet" id="reset">Recomeçar</button>
+      </div>
+    </header>
+
+    <main class="layout">
+      <!-- Coluna da esquerda: o que a pessoa preenche, na ordem -->
+      <form class="form" id="form" aria-label="Dados da projeção" novalidate>
+        <section class="step">
+          <h2 class="step-title"><span class="step-n" aria-hidden="true">1</span>Qual é o funil?</h2>
+          <div class="choices" id="funnelChoice" role="radiogroup" aria-label="Tipo de funil"></div>
+        </section>
+
+        <section class="step">
+          <h2 class="step-title"><span class="step-n" aria-hidden="true">2</span>O que você quer descobrir?</h2>
+          <div class="choices choices-list" id="modeChoice" role="radiogroup" aria-label="Pergunta"></div>
+          <div class="target">
+            <label for="target" id="targetLabel">Quanto você vai investir?</label>
+            <div class="inp inp-lg">
+              <span class="affix" id="targetPrefix">R$</span>
+              <input id="target" type="text" inputmode="decimal" autocomplete="off" />
+              <span class="affix" id="targetSuffix"></span>
+            </div>
+            <p class="field-error" id="targetError" role="alert"></p>
+          </div>
+        </section>
+
+        <section class="step">
+          <h2 class="step-title"><span class="step-n" aria-hidden="true">3</span>Quais taxas você espera?</h2>
+          <p class="step-note">Use o que você já vê nas campanhas ou a sua melhor estimativa. Esses números são o cenário conservador. Arraste a barra ou digite o valor.</p>
+          <div id="premises"></div>
+        </section>
+
+        <section class="step">
+          <h2 class="step-title"><span class="step-n" aria-hidden="true">4</span>Quanto pode variar?</h2>
+          <p class="step-note">O pessimista piora cada taxa e o otimista melhora. Como o funil tem várias etapas, a diferença no resultado final fica bem maior que a porcentagem escolhida.</p>
+          <div class="variation">
+            <div class="var-row">
+              <label for="varPess"><span class="swatch sw-pessimista" aria-hidden="true"></span>Pessimista</label>
+              <input type="range" class="slider slider-pessimista" id="varPessRange" min="0" max="50" step="1" aria-label="Pessimista, porcentagem pior" />
+              <div class="inp inp-xs">
+                <input id="varPess" type="text" inputmode="decimal" autocomplete="off" />
+                <span class="affix">% pior</span>
+              </div>
+            </div>
+            <div class="var-row">
+              <label for="varOtim"><span class="swatch sw-otimista" aria-hidden="true"></span>Otimista</label>
+              <input type="range" class="slider slider-otimista" id="varOtimRange" min="0" max="50" step="1" aria-label="Otimista, porcentagem melhor" />
+              <div class="inp inp-xs">
+                <input id="varOtim" type="text" inputmode="decimal" autocomplete="off" />
+                <span class="affix">% melhor</span>
+              </div>
+            </div>
+          </div>
+          <label class="check">
+            <input type="checkbox" id="manualToggle" />
+            <span>Quero digitar as taxas de cada cenário</span>
+          </label>
+
+          <div class="taxes">
+            <label for="taxas">Taxas da plataforma e impostos <span class="optional">opcional</span></label>
+            <div class="inp inp-xs">
+              <input id="taxas" type="text" inputmode="decimal" autocomplete="off" />
+              <span class="affix">% do faturamento</span>
+            </div>
+            <p class="step-note" id="taxasNote"></p>
+          </div>
+        </section>
+      </form>
+
+      <!-- Coluna da direita: a resposta -->
+      <div class="results" aria-live="polite">
+        <section class="answer" id="answer" aria-label="Resposta" tabindex="-1"></section>
+        <section class="cards" id="cards" aria-label="Cenários"></section>
+        <section class="panel">
+          <div class="panel-head">
+            <h2>Funil completo, etapa por etapa</h2>
+            <p>Os números pequenos mostram quanto de cada etapa é preciso para uma venda, quanto cada custo pesa no ticket e a diferença para o conservador.</p>
+          </div>
+          <div class="sheet-scroll">
+            <table class="sheet" id="sheet"></table>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer class="foot">
+      <p>Os valores ficam salvos neste navegador. Use “Copiar link” para mandar a projeção para alguém do time.</p>
+    </footer>
+  </div>
+
+  <a class="mobile-bar" id="mobileBar" href="#answer" aria-label="Ver resultado"></a>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script type="module" src="src/app.js"></script>
+</body>
+</html>
